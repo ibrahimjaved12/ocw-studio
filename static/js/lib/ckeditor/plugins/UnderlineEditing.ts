@@ -1,5 +1,3 @@
-// abbreviation/abbreviationediting.js
-
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import { editor } from "@ckeditor/ckeditor5-core"
 import UnderlineCommand from './UnderlineCommand';
