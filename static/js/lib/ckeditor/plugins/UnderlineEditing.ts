@@ -21,7 +21,6 @@ export default class UnderlineEditing extends Plugin {
           'u',
           (          viewElement: { getStyle: (arg0: string) => any; }) => {
             const textDecoration = viewElement.getStyle( 'text-decoration' );
-            console.log(textDecoration)
             if ( !textDecoration ) {
               return null;
             }
