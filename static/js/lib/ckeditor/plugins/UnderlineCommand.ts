@@ -8,23 +8,57 @@ export default class UnderlineCommand extends Command {
       this.editor = editor;
     }
     refresh() {
-        const model = this.editor.model;
-        const doc = model.document;
-        const selection = doc.selection;
-        this.isEnabled = model.schema.checkAttributeInSelection( selection, 'underline' );
-    }
-    execute() {
-        const model = this.editor.model;
-        const doc = model.document;
-        const selection = doc.selection;
-    
-        model.change( (writer: { removeSelectionAttribute: (arg0: string) => void; setSelectionAttribute: (arg0: string, arg1: boolean) => void; }) => {
-            if ( selection.hasAttribute( 'underline' ) ) {
-                writer.removeSelectionAttribute( 'underline' );
-            } else {
-                writer.setSelectionAttribute( 'underline', true );
-            }
-        });
-    }
+		const model = this.editor.model;
+		const doc = model.document;
+
+		this.value = this._getValueFromFirstAllowedNode();
+		this.isEnabled = model.schema.checkAttributeInSelection( doc.selection, 'underline' );
+	}
+
+    execute( options = { forceValue: undefined }  ) {
+		const model = this.editor.model;
+		const doc = model.document;
+		const selection = doc.selection;
+		const value = ( options.forceValue === undefined ) ? !this.value : options.forceValue;
+
+		model.change( (writer: { setSelectionAttribute: (arg0: any, arg1: boolean) => void; removeSelectionAttribute: (arg0: any) => void; setAttribute: (arg0: any, arg1: boolean, arg2: any) => void; removeAttribute: (arg0: any, arg1: any) => void; }) => {
+			if ( selection.isCollapsed ) {
+				if ( value ) {
+					writer.setSelectionAttribute( 'underline', true );
+				} else {
+					writer.removeSelectionAttribute( 'underline' );
+				}
+			} else {
+				const ranges = model.schema.getValidRanges( selection.getRanges(), 'underline' );
+
+				for ( const range of ranges ) {
+					if ( value ) {
+						writer.setAttribute( 'underline', value, range );
+					} else {
+						writer.removeAttribute( 'underline', range );
+					}
+				}
+			}
+		} );
+	}
+    _getValueFromFirstAllowedNode() {
+		const model = this.editor.model;
+		const schema = model.schema;
+		const selection = model.document.selection;
+
+		if ( selection.isCollapsed ) {
+			return selection.hasAttribute( 'underline' );
+		}
+
+		for ( const range of selection.getRanges() ) {
+			for ( const item of range.getItems() ) {
+				if ( schema.checkAttribute( item, 'underline' ) ) {
+					return item.hasAttribute( 'underline' );
+				}
+			}
+		}
+
+		return false;
+	}
    
 }
