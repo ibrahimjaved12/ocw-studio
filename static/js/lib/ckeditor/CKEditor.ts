@@ -19,6 +19,7 @@ import CodeBlockPlugin from "@ckeditor/ckeditor5-code-block/src/codeblock"
 import CodePlugin from "@ckeditor/ckeditor5-basic-styles/src/code"
 import Mathematics from "ckeditor5-math/src/math"
 import MathSyntax from "./plugins/MathSyntax"
+import Image from "./plugins/Image"
 
 import Markdown from "./plugins/Markdown"
 import ResourceEmbed from "./plugins/ResourceEmbed"
@@ -60,6 +61,7 @@ const SUPPORTED_PROGRAMMING_LANGUAGES = [
 
 export const FullEditorConfig = {
   plugins: [
+    Image,
     EssentialsPlugin,
     AutoformatPlugin,
     BoldPlugin,
@@ -93,6 +95,7 @@ export const FullEditorConfig = {
   ],
   toolbar: {
     items: [
+      "img",
       "heading",
       "|",
       "bold",
@@ -134,6 +137,7 @@ export const FullEditorConfig = {
 
 export const MinimalEditorConfig = {
   plugins: [
+    Image,
     EssentialsPlugin,
     AutoformatPlugin,
     BoldPlugin,
@@ -152,6 +156,7 @@ export const MinimalEditorConfig = {
   ],
   toolbar: {
     items: [
+      "img",
       "bold",
       "italic",
       "code",
